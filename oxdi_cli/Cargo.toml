@@ -1,0 +1,30 @@
+[package]
+authors = ["Danil Kondratiev <knightpp@protonmail.com>"]
+description = "Search in Oxford Dictionary from the CLI!"
+edition = "2018"
+name = "oxdi_cli"
+version = "0.1.0"
+
+[features]
+default = []
+embed-keys = ["dotenv_codegen"]
+
+[dependencies]
+argh = "0.1"
+bunt = "0.2"
+serde_json = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.2"
+anyhow = "1.0"
+dotenv = "0.15"
+
+[dependencies.dotenv_codegen]
+version = "0.15"
+optional = true
+
+[dependencies.async-std]
+features = ["attributes"]
+version = "1.8"
+
+[dependencies.oxdi]
+path = "../oxdi"
