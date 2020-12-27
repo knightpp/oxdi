@@ -25,7 +25,7 @@ struct Args {
     language: oxdi::Language,
 
     #[argh(option, short = 't', from_str_fn(parse_lang))]
-    /// source language
+    /// target language
     target_language: Option<oxdi::Language>,
     // #[argh(option, from_str_fn(parse_vec_string))]
     // /// filter by grammatical features

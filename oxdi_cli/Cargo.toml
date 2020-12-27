@@ -1,6 +1,6 @@
 [package]
 authors = ["Danil Kondratiev <knightpp@protonmail.com>"]
-description = "Search in Oxford Dictionary from the CLI!"
+description = "Search in Oxford Dictionary from the the CLI!"
 edition = "2018"
 name = "oxdi_cli"
 version = "0.1.0"
