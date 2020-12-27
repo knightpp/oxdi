@@ -66,8 +66,11 @@ fn parse_word(value: &str) -> Result<String, String> {
     }
 }
 
-#[async_std::main]
-async fn main() -> Result<()> {
+fn main() -> Result<()> {
+    futures::executor::block_on(run())
+}
+
+async fn run() -> Result<()> {
     dotenv::dotenv().ok();
     let args: Args = argh::from_env();
     if args.version {
@@ -107,7 +110,7 @@ async fn main() -> Result<()> {
         .await
         .context("request to HTTP API failed")?;
 
-    for headword_entry in resp.results.unwrap() {
+    for headword_entry in resp.results.context("no results returned")? {
         // let word_type = headword_entry.type_.unwrap();
         for lexical_entry in headword_entry.lexical_entries {
             let text = lexical_entry.text;
@@ -126,22 +129,31 @@ async fn main() -> Result<()> {
             //
             println!("Pronunciations:");
             // println!("\t{}:", "Pronunciations");
-            for entry in lexical_entry.entries.unwrap() {
-                for pron in entry.pronunciations.unwrap() {
+            for entry in lexical_entry
+                .entries
+                .context("no entries in lexical entry")?
+            {
+                for pron in entry.pronunciations.context("no pronunciations")? {
                     bunt::println!(
                         "\t/{[blue]}/, {}",
-                        pron.phonetic_spelling.unwrap(),
-                        pron.dialects.unwrap().join(", ")
+                        pron.phonetic_spelling.context("no phonetic spelling")?,
+                        pron.dialects.context("no dialects")?.join(", ")
                     );
                 }
-                bunt::println!("\t{$green}Definitions:{/$}");
-                for (i, sense) in entry.senses.as_ref().unwrap().iter().enumerate() {
-                    for (i_defi, defi) in sense.definitions.as_ref().unwrap().iter().enumerate() {
-                        println!("\t{}.{}) {}", i + 1, i_defi + 1, defi);
-                    }
-                }
-                bunt::println!("\t{$bold}Examples:{/$}");
                 if let Some(senses) = entry.senses.as_ref() {
+                    bunt::println!("\t{$green}Definitions:{/$}");
+                    for (i, sense) in senses.iter().enumerate() {
+                        for (i_defi, defi) in sense
+                            .definitions
+                            .as_ref()
+                            .context("no definitions")?
+                            .iter()
+                            .enumerate()
+                        {
+                            println!("\t{}.{}) {}", i + 1, i_defi + 1, defi);
+                        }
+                    }
+                    bunt::println!("\t{$bold}Examples:{/$}");
                     for (i, sense) in senses.iter().enumerate() {
                         if let Some(examples) = sense.examples.as_ref() {
                             for (i_example, example) in examples.iter().enumerate() {
