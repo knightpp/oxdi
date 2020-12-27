@@ -15,5 +15,5 @@ Options:
 ```
 
 # Preview
-![image](https://raw.githubusercontent.com/knightpp/oxdi/images/oxdi.jpg)
+![image](https://raw.githubusercontent.com/knightpp/oxdi/images/oxdi_cli.png)
 
