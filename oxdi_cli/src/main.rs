@@ -65,9 +65,10 @@ fn parse_word(value: &str) -> Result<String, String> {
         Ok(value.to_owned())
     }
 }
-
-fn main() -> Result<()> {
-    futures::executor::block_on(run())
+#[async_std::main]
+async fn main() -> Result<()> {
+    run().await
+    // futures::executor::block_on(run())
 }
 
 async fn run() -> Result<()> {
